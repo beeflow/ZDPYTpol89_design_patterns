@@ -15,7 +15,7 @@ from abc import ABC, abstractmethod
 
 
 class Vehicle(ABC):
-    def __init__(self, brand, model, color, doors):
+    def __init__(self, brand: str, model: str, color: str, doors: int):
         self.brand = brand
         self.model = model
         self.color = color
