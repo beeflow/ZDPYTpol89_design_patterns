@@ -8,7 +8,7 @@
 # - kolorze,
 # - liczbie drzwi.
 # Dodatkowo drzwi mają informację o tym, czy są zablokowane, czy nie. Klasa centralnego zamka przesyła
-# sygnał blokowania i odblokowania do wszystkich drzwi jednocześnie, korzystając z wzorca dependency injection.
+# sygnał blokowania i odblokowania do wszystkich drzwi jednocześnie, korzystając ze wzorca dependency injection.
 # Centralny zamek po pierwszym sygnale otwarcia odblokowuje tylko drzwi kierowcy. Kolejny sygnał otwiera pozostałe
 # drzwi.
 
