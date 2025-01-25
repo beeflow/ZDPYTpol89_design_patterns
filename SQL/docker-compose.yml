@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  mysql:
+    image: mysql:9.2.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'zdpytpol89'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'y78btyveisvho'
+      MYSQL_ROOT_PASSWORD: 'fyn873bvtyw9'
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./my-db:/var/lib/mysql
