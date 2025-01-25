@@ -35,3 +35,8 @@ create table book_author
     foreign key (ba_book_id) references book (book_id) on update cascade on delete restrict,
     foreign key (ba_author_id) references author (author_id) on update cascade on delete restrict
 );
+
+insert into user (user_name, user_surname, user_email) values ('Rafał', 'Przetakowski', 'rafal.p@beeflow.co.uk');
+insert into user (user_name, user_surname, user_email) values ('Tomasz', 'Zasada', 'tomasz.zasada@wp.pl');
+insert into user (user_name, user_surname, user_email) values ('Olga', 'Czytelna', 'olga.c_12@onet.pl');
+insert into user (user_name, user_surname, user_email) values ('Zenon', 'Kwaśny', 'zenonk@onet.pl');
