@@ -57,3 +57,36 @@ create table rent_car
     foreign key (car_id) references car (id) on update cascade on delete restrict,
     foreign key (customer_id) references customer (id) on update cascade on delete restrict
 );
+
+insert into first_name(name)
+values ('Rafał'),
+       ('Tomasz'),
+       ('Olga');
+insert into last_name(name)
+values ('Przetakowski'),
+       ('Szczęsny'),
+       ('Drajwerka');
+insert into car_brand(name)
+values ('MG'),
+       ('BMW'),
+       ('Audi'),
+       ('Skoda');
+insert into car_model(name)
+values ('ZS'),
+       ('X5'),
+       ('A6'),
+       ('Oktavia');
+
+
+insert into car (brand_id, model_id, plate_number)
+values (1, 1, 'NU74 WPK');
+
+insert into car (brand_id, model_id, plate_number)
+values ((select id from car_brand where name = 'BMW'),
+        (select id from car_model where name = 'X5'),
+        'SW16 FVO');
+
+select car.id, car_brand.name as brand, car_model.name as model, plate_number
+from car
+INNER JOIN car_brand on car.brand_id = car_brand.id
+inner join car_model on car.model_id = car_model.id;

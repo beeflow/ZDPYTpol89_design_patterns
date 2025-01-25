@@ -36,7 +36,25 @@ create table book_author
     foreign key (ba_author_id) references author (author_id) on update cascade on delete restrict
 );
 
-insert into user (user_name, user_surname, user_email) values ('Rafał', 'Przetakowski', 'rafal.p@beeflow.co.uk');
-insert into user (user_name, user_surname, user_email) values ('Tomasz', 'Zasada', 'tomasz.zasada@wp.pl');
-insert into user (user_name, user_surname, user_email) values ('Olga', 'Czytelna', 'olga.c_12@onet.pl');
-insert into user (user_name, user_surname, user_email) values ('Zenon', 'Kwaśny', 'zenonk@onet.pl');
+insert into user (user_name, user_surname, user_email)
+values ('Rafał', 'Przetakowski', 'rafal.p@beeflow.co.uk'),
+       ('Tomasz', 'Zasada', 'tomasz.zasada@wp.pl'),
+       ('Zenon', 'Kwaśny', 'zenonk@onet.pl');
+
+insert into author (author_name, author_surname)
+values ('Stephen', 'King'),
+       ('J.K', 'Rowling');
+insert into book (book_title, book_isbn)
+values ('Wieża', '43tergerg'),
+       ('Hory Portier', '34t34rgdfg');
+
+insert into book_author (ba_book_id, ba_author_id)
+VALUES ((select book.book_id from book where book_isbn = '43tergerg'),
+        (select author.author_id from author where author_name = 'Stephen' and author_surname = 'King')),
+       ((select book.book_id from book where book_isbn = '34t34rgdfg'),
+        (select author.author_id from author where author_name = 'J.K' and author_surname = 'Rowling'));
+
+select book_title, book_isbn, author_name, author_surname
+from book
+inner join book_author ba on book.book_id = ba.ba_book_id
+inner join author a on ba.ba_author_id = a.author_id;
