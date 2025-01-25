@@ -88,5 +88,28 @@ values ((select id from car_brand where name = 'BMW'),
 
 select car.id, car_brand.name as brand, car_model.name as model, plate_number
 from car
-INNER JOIN car_brand on car.brand_id = car_brand.id
-inner join car_model on car.model_id = car_model.id;
+         INNER JOIN car_brand on car.brand_id = car_brand.id
+         inner join car_model on car.model_id = car_model.id;
+
+
+insert into customer (first_name, last_name, licence_number)
+VALUES ((select id from first_name where name = 'Rafał'),
+        (select id from last_name where name = 'Przetakowski'),
+        'tu674tgvuk');
+
+
+insert into customer (first_name, last_name, licence_number)
+VALUES ((select id from first_name where name = 'Tomasz'),
+        (select id from last_name where name = 'Szczęsny'),
+        '53453t'),
+       ((select id from first_name where name = 'Olga'),
+        (select id from last_name where name = 'Drajwerka'),
+        '3tre5e');
+
+
+
+
+
+
+
+
