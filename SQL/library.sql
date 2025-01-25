@@ -58,3 +58,5 @@ select book_title, book_isbn, author_name, author_surname
 from book
 inner join book_author ba on book.book_id = ba.ba_book_id
 inner join author a on ba.ba_author_id = a.author_id;
+
+update book set book_isbn = 'thghfgh', book_pages = 366 where book_id = 2;
