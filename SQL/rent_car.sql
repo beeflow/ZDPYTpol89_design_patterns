@@ -107,9 +107,85 @@ VALUES ((select id from first_name where name = 'Tomasz'),
         '3tre5e');
 
 
+insert into rent_car(car_id, customer_id, rented_on)
+values (1, 1, now());
+insert into rent_car(car_id, customer_id, rented_on)
+values (3, 2, now());
+insert into rent_car(car_id, customer_id, rented_on)
+values (3, 3, now());
+
+-- Full outer join in MySQL...
+
+select cb.name as brand,
+       cm.name as model,
+       car.plate_number,
+       fn.name as first_name,
+       ln.name as last_name
+from car
+         left join car_brand cb on cb.id = car.brand_id
+         left join car_model cm on cm.id = car.model_id
+         left join car_rental.rent_car rc on car.id = rc.car_id
+         left join customer c on rc.customer_id = c.id
+         left join first_name fn on c.first_name = fn.id
+         left join last_name ln on c.last_name = ln.id
+
+union
+
+select cb.name as brand,
+       cm.name as model,
+       car.plate_number,
+       fn.name as first_name,
+       ln.name as last_name
+from car
+         right join car_brand cb on cb.id = car.brand_id
+         right join car_model cm on cm.id = car.model_id
+         right join car_rental.rent_car rc on car.id = rc.car_id
+         right join customer c on rc.customer_id = c.id
+         right join first_name fn on c.first_name = fn.id
+         right join last_name ln on c.last_name = ln.id;
+
+explain
+select cb.name as brand,
+       cm.name as model,
+       car.plate_number,
+       fn.name as first_name,
+       ln.name as last_name
+from car
+          join car_brand cb on cb.id = car.brand_id
+          join car_model cm on cm.id = car.model_id
+          join rent_car rc on car.id = rc.car_id
+          join customer c on rc.customer_id = c.id
+          join first_name fn on c.first_name = fn.id
+          join last_name ln on c.last_name = ln.id;
+
+explain
+select cb.name as brand,
+       cm.name as model,
+       car.plate_number,
+       fn.name as first_name,
+       ln.name as last_name
+from rent_car as rc
+         join car on car.id = rc.car_id
+         join car_brand cb on cb.id = car.brand_id
+         join car_model cm on cm.id = car.model_id
+         join customer c on rc.customer_id = c.id
+         join first_name fn on c.first_name = fn.id
+         join last_name ln on c.last_name = ln.id;
 
 
+select distinct cb.name as brand,
+       cm.name as model,
+       car.plate_number,
+       fn.name as first_name,
+       ln.name as last_name
+from rent_car as rc
+         join car on car.id = rc.car_id
+         join car_brand cb on cb.id = car.brand_id
+         join car_model cm on cm.id = car.model_id
+         join customer c on rc.customer_id = c.id
+         join first_name fn on c.first_name = fn.id
+         join last_name ln on c.last_name = ln.id
+    where rc.returned_on in ('2025-01-24', '2025-01-25');
 
-
-
+update rent_car set returned_on = now() where customer_id = 2 and car_id = 3;
 
