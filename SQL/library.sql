@@ -60,3 +60,4 @@ inner join book_author ba on book.book_id = ba.ba_book_id
 inner join author a on ba.ba_author_id = a.author_id;
 
 update book set book_isbn = 'thghfgh', book_pages = 366 where book_id = 2;
+update author set author_name = 'J.K.' where author_name = 'J.K';
