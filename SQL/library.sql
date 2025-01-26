@@ -175,22 +175,26 @@ from author
 
 drop view v_author_full_name;
 
+create view v_book_with_authors as
 select book.*, v_author_full_name.*
 from book
-         join book_author ba on book.book_id = ba.ba_book_id
-         join v_author_full_name on ba.ba_author_id = v_author_full_name.id;
+         left join book_author ba on book.book_id = ba.ba_book_id
+         left join v_author_full_name on ba.ba_author_id = v_author_full_name.id;
 
 -- wyżej to to samo co niżej ;)
-
 select book.*, v_author_full_name.*
 from book
-         join book_author ba on book.book_id = ba.ba_book_id
-         join (select author.author_id as id, first_name.name as imie, last_name.name as nazwisko
+         left join book_author ba on book.book_id = ba.ba_book_id
+         left join (select author.author_id as id, first_name.name as imie, last_name.name as nazwisko
                from author
                         join first_name on author.first_name_id = first_name.id
                         join last_name on author.last_name_id = last_name.id) as v_author_full_name
               on ba.ba_author_id = v_author_full_name.id;
 
-select *
-from book
-where book_title = 'Władca Pierścieni';
+create view v_user_full_data as
+select user_id, user_email, user_phone, user_card_number, first_name.name as imie, last_name.name as nazwisko
+from user
+    join first_name on user_first_name_id = first_name.id
+    join last_name on user_last_name_id = last_name.id;
+
+select * from v_user_full_data;
