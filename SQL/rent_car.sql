@@ -188,4 +188,3 @@ from rent_car as rc
     where rc.returned_on in ('2025-01-24', '2025-01-25');
 
 update rent_car set returned_on = now() where customer_id = 2 and car_id = 3;
-

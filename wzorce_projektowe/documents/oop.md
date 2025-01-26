@@ -201,7 +201,7 @@ wartości atrybutów).
 
 #### **Obiekt:**
 
-- To **instancja klasy**.
+- To **instancja klasy**
 - Obiekt posiada unikalne dane, ale zachowania dzieli z innymi obiektami tej samej klasy.
 
 ---
@@ -240,26 +240,78 @@ print(dog2.bark())  # Buddy says woof!
 
 ---
 
-### **4. Konstruktor (`__init__`)**
+### **Konstruktor (`__new__`) i metoda inicjalizująca (`__init__`)**
 
-Konstruktor to specjalna metoda wywoływana automatycznie przy tworzeniu obiektu. Służy do inicjalizacji danych.
+- **Konstruktor (`__new__`):**
+- W Pythonie, za faktyczne utworzenie nowej instancji klasy, jest odpowiedzialna metoda `__new__` jest odpowiedzialna.
+  Jest wywoływana przed `__init__` i kontroluje proces tworzenia obiektu w pamięci. Możesz ją nadpisać, gdy potrzebujesz
+  kontrolować tworzenie obiektów.
 
-#### **Przykład z konstruktorem:**
+- **Metoda inicjalizująca (`__init__`):**  
+  Metoda `__init__` zaś, służy do inicjalizacji danych obiektu już utworzonego przez `__new__`. To tutaj ustawia się atrybuty
+  instancji i przygotowuje obiekt do użycia. I to właśnie ta metoda jest najczęściej spotykaną w kodzie. 
+
+---
+
+### **Różnice między `__new__` a `__init__`:**
+
+| **Metoda** | **Rola**                                | **Kiedy jest wywoływana?**                       |
+|------------|-----------------------------------------|--------------------------------------------------|
+| `__new__`  | Tworzy nowy obiekt w pamięci.           | Przed utworzeniem obiektu, przy wywołaniu klasy. |
+| `__init__` | Inicjalizuje obiekt po jego utworzeniu. | Po utworzeniu obiektu przez `__new__`.           |
+
+---
+
+### **Przykład działania `__new__` i `__init__`:**
 
 ```python
-class Car:
-    def __init__(self, brand, model):
-        self.brand = brand
-        self.model = model
+class Example:
+    def __new__(cls, *args, **kwargs):
+        print("Tworzenie obiektu w __new__")
+        instance = super().__new__(cls)  # Tworzy obiekt
+        return instance
+
+    def __init__(self, name):
+        print("Inicjalizacja obiektu w __init__")
+        self.name = name
+
+
+example = Example("Rafał")
+# Output:
+# Tworzenie obiektu w __new__
+# Inicjalizacja obiektu w __init__
 ```
 
-#### **Tworzenie obiektu:**
+---
+
+### **Rozszerzenie: metoda `__call__`**
+
+Metoda `__call__` umożliwia wywoływanie instancji klasy jak funkcji. Może być przydatna, gdy chcesz nadać instancji
+dynamiczne zachowanie.
+
+#### Przykład:
 
 ```python
-car1 = Car("Toyota", "Corolla")
-print(car1.brand)  # Toyota
-print(car1.model)  # Corolla
+class CallableClass:
+    def __init__(self, name):
+        self.name = name
+
+    def __call__(self):
+        print(f"Wywołanie instancji klasy: {self.name}")
+
+
+obj = CallableClass("Rafał")
+obj()  # Wywołanie instancji jak funkcji
+# Output: Wywołanie instancji klasy: Rafał
 ```
+
+---
+
+### **Podsumowanie:**
+
+- `__new__` to prawdziwy konstruktor odpowiedzialny za utworzenie obiektu.
+- `__init__` jest metodą inicjalizującą, która przygotowuje obiekt po jego utworzeniu.
+- `__call__` pozwala wywoływać obiekt jak funkcję, co może być użyteczne w zaawansowanych scenariuszach.
 
 ---
 

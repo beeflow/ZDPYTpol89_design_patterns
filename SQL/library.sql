@@ -72,3 +72,51 @@ from book
          join book_author ba on book.book_id = ba.ba_book_id
          join author a on a.author_id = ba.ba_author_id
 where a.author_name = 'Stephen';
+
+
+create table first_name
+(
+    id   int auto_increment primary key,
+    name varchar(15) not null
+);
+
+create table last_name
+(
+    id   int auto_increment primary key,
+    name varchar(15) not null unique
+);
+
+alter table user
+    add column user_first_name_id int not null;
+alter table user
+    add column user_last_name_id int not null;
+
+alter table first_name add unique (name);
+
+insert into first_name(name) select distinct user_name from user;
+insert into last_name(name) select distinct user_surname from user;
+
+insert into last_name(name) select distinct author_name from author;
+insert into first_name(name) select distinct author_surname from author;
+
+delete from last_name where name in (select distinct author_name from author);
+delete from first_name where name in (select distinct author_surname from author);
+
+insert into last_name(name) select distinct author_surname from author;
+insert into first_name(name) select distinct author_name from author where author_name not in (
+    select name from first_name
+);
+
+update user join first_name on user.user_name = first_name.name set user.user_first_name_id = first_name.id;
+update user join last_name on user.user_surname = last_name.name set user.user_last_name_id = last_name.id;
+
+alter table user
+    add constraint user_first_name_id_fk foreign key (user_first_name_id)
+        references first_name (id) on update cascade on delete restrict;
+
+alter table user
+    add constraint user_last_name_id_fk foreign key (user_last_name_id)
+        references last_name (id) on update cascade on delete restrict;
+
+alter table user drop column user_name;
+alter table user drop column user_surname;
