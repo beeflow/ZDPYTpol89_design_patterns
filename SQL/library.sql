@@ -91,24 +91,34 @@ alter table user
 alter table user
     add column user_last_name_id int not null;
 
-alter table first_name add unique (name);
+alter table first_name
+    add unique (name);
 
-insert into first_name(name) select distinct user_name from user;
-insert into last_name(name) select distinct user_surname from user;
+insert into first_name(name)
+select distinct user_name
+from user;
+insert into last_name(name)
+select distinct user_surname
+from user;
 
-insert into last_name(name) select distinct author_name from author;
-insert into first_name(name) select distinct author_surname from author;
+insert into last_name(name)
+select distinct author_name
+from author;
+insert into first_name(name)
+select distinct author_surname
+from author;
 
-delete from last_name where name in (select distinct author_name from author);
-delete from first_name where name in (select distinct author_surname from author);
+delete
+from last_name
+where name in (select distinct author_name from author);
+delete
+from first_name
+where name in (select distinct author_surname from author);
 
-insert into last_name(name) select distinct author_surname from author;
-insert into first_name(name) select distinct author_name from author where author_name not in (
-    select name from first_name
-);
-
-update user join first_name on user.user_name = first_name.name set user.user_first_name_id = first_name.id;
-update user join last_name on user.user_surname = last_name.name set user.user_last_name_id = last_name.id;
+update user join first_name on user.user_name = first_name.name
+set user.user_first_name_id = first_name.id;
+update user join last_name on user.user_surname = last_name.name
+set user.user_last_name_id = last_name.id;
 
 alter table user
     add constraint user_first_name_id_fk foreign key (user_first_name_id)
@@ -118,5 +128,69 @@ alter table user
     add constraint user_last_name_id_fk foreign key (user_last_name_id)
         references last_name (id) on update cascade on delete restrict;
 
-alter table user drop column user_name;
-alter table user drop column user_surname;
+alter table user
+    drop column user_name;
+alter table user
+    drop column user_surname;
+
+
+alter table author
+    add column first_name_id int not null;
+alter table author
+    add column last_name_id int not null;
+
+insert into last_name(name)
+select distinct author_surname
+from author;
+insert into first_name(name)
+select distinct author_name
+from author
+where author_name not in (select name
+                          from first_name);
+
+update author join first_name on author.author_name = first_name.name
+set author.first_name_id = first_name.id;
+update author join last_name on author.author_surname = last_name.name
+set author.last_name_id = last_name.id;
+
+alter table author
+    add constraint author_first_name_id_fk
+        foreign key (first_name_id) references first_name (id) on update cascade on delete restrict;
+
+alter table author
+    add constraint author_last_name_id_fk
+        foreign key (last_name_id) references last_name (id) on update cascade on delete restrict;
+
+alter table author
+    drop column author_name;
+alter table author
+    drop column author_surname;
+
+-- bardzo nieładne polskie nazwy pól - tak się nie robi!!! ;P
+create view v_author_full_name as
+select author.author_id as id, first_name.name as imie, last_name.name as nazwisko
+from author
+         join first_name on author.first_name_id = first_name.id
+         join last_name on author.last_name_id = last_name.id;
+
+drop view v_author_full_name;
+
+select book.*, v_author_full_name.*
+from book
+         join book_author ba on book.book_id = ba.ba_book_id
+         join v_author_full_name on ba.ba_author_id = v_author_full_name.id;
+
+-- wyżej to to samo co niżej ;)
+
+select book.*, v_author_full_name.*
+from book
+         join book_author ba on book.book_id = ba.ba_book_id
+         join (select author.author_id as id, first_name.name as imie, last_name.name as nazwisko
+               from author
+                        join first_name on author.first_name_id = first_name.id
+                        join last_name on author.last_name_id = last_name.id) as v_author_full_name
+              on ba.ba_author_id = v_author_full_name.id;
+
+select *
+from book
+where book_title = 'Władca Pierścieni';
