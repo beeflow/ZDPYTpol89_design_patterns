@@ -221,6 +221,7 @@ begin
     return (select id from first_name where lower(name) = lower(firstName));
 end;
 
+
 select f_add_first_name('Roman') as first_name_id;
 
 
@@ -326,6 +327,34 @@ begin
     then
         update book_copy set status_id = 1 where id = NEW.book_copy_id;
     end if;
+
+    -- podmiana wypożyczonej książki
+    -- logicznie nieprawidłowe!
+    if OLD.book_copy_id <> NEW.book_copy_id
+    then
+        update book_copy set status_id = (select status_id from book_copy where id = OLD.book_copy_id)
+                         where id = NEW.book_copy_id;
+        update book_copy set status_id = 1 where id = OLD.book_copy_id;
+    end if;
 end;
 
 update user_book_rent set returned_on = '2025-01-29' where id = 8;
+
+start transaction;
+
+    insert into first_name(name) values ('Monika');
+    insert into first_name(name) values ('Rafał');
+    insert into first_name(name) values ('Wacław');
+    insert into first_name(name) values ('Kunegunda');
+
+    select * from first_name where name = 'Monika';
+
+commit; -- to ja decyduję
+
+rollback; -- to ja decyduję
+
+-- start transaction
+-- 1. sprawdzam, czy mogę wypożyczyć książkę
+-- 2. dodaję informację o wypożyczeniu do tabeli wypożyczeń
+-- 3. zmieniam status egzemplarza na wypożyczony
+-- commit
