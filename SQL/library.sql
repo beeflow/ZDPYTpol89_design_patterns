@@ -1,3 +1,5 @@
+create database if not exists my_library;
+
 CREATE TABLE book
 (
     book_id           INT AUTO_INCREMENT,
@@ -338,20 +340,20 @@ begin
     end if;
 end;
 
-update user_book_rent set returned_on = '2025-01-29' where id = 8;
+# update user_book_rent set returned_on = '2025-01-29' where id = 8;
 
-start transaction;
+# start transaction;
 
-    insert into first_name(name) values ('Monika');
-    insert into first_name(name) values ('Rafał');
-    insert into first_name(name) values ('Wacław');
-    insert into first_name(name) values ('Kunegunda');
-
-    select * from first_name where name = 'Monika';
-
-commit; -- to ja decyduję
-
-rollback; -- to ja decyduję
+#     insert into first_name(name) values ('Monika');
+#     insert into first_name(name) values ('Rafał');
+#     insert into first_name(name) values ('Wacław');
+#     insert into first_name(name) values ('Kunegunda');
+#
+#     select * from first_name where name = 'Monika';
+#
+# commit; -- to ja decyduję
+#
+# rollback; -- to ja decyduję
 
 -- start transaction
 -- 1. sprawdzam, czy mogę wypożyczyć książkę

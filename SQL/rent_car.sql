@@ -1,4 +1,4 @@
-create database car_rental;
+create database if not exists car_rental;
 
 create table car_brand
 (
