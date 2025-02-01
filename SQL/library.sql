@@ -221,3 +221,20 @@ begin
 end;
 
 select f_add_first_name('Roman') as first_name_id;
+
+
+create function f_add_last_name(lastName varchar(15)) returns int
+begin
+    if (select id from last_name where lower(name) = lower(lastName)) is null
+    then
+        insert into last_name(name) values (lastName);
+    end if;
+
+    return (select id from last_name where lower(name) = lower(lastName));
+end;
+
+select f_add_last_name('Górny') as last_name_id;
+
+insert into author(first_name_id, last_name_id)
+values ((select f_add_first_name('Wacław')),
+        (select f_add_last_name('Wacławski')));
