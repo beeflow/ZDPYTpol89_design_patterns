@@ -459,8 +459,7 @@ Utwórz klasę `Rectangle`, która przechowuje:
 
 ### **1. Wprowadzenie**
 
-**Enkapsulacja** to jedna z podstawowych cech programowania obiektowego. Polega na **ukrywaniu szczegółów implementacji
-** klasy i udostępnianiu wyłącznie niezbędnych funkcji poprzez tzw. publiczny interfejs.
+**Enkapsulacja** to jedna z podstawowych cech programowania obiektowego. Polega na **ukrywaniu szczegółów implementacji** klasy i udostępnianiu wyłącznie niezbędnych funkcji poprzez tzw. publiczny interfejs.
 
 ---
 

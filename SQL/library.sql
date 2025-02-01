@@ -186,15 +186,38 @@ select book.*, v_author_full_name.*
 from book
          left join book_author ba on book.book_id = ba.ba_book_id
          left join (select author.author_id as id, first_name.name as imie, last_name.name as nazwisko
-               from author
-                        join first_name on author.first_name_id = first_name.id
-                        join last_name on author.last_name_id = last_name.id) as v_author_full_name
-              on ba.ba_author_id = v_author_full_name.id;
+                    from author
+                             join first_name on author.first_name_id = first_name.id
+                             join last_name on author.last_name_id = last_name.id) as v_author_full_name
+                   on ba.ba_author_id = v_author_full_name.id;
 
 create view v_user_full_data as
 select user_id, user_email, user_phone, user_card_number, first_name.name as imie, last_name.name as nazwisko
 from user
-    join first_name on user_first_name_id = first_name.id
-    join last_name on user_last_name_id = last_name.id;
+         join first_name on user_first_name_id = first_name.id
+         join last_name on user_last_name_id = last_name.id;
 
-select * from v_user_full_data;
+select *
+from v_user_full_data;
+
+insert into last_name(name) values ('Szczęsny');
+
+insert into author(first_name_id, last_name_id)
+values ((select id from first_name where name = 'Tomasz'),
+        (select id from last_name where name = 'Szczęsny'));
+
+-- bez tego nie stworzycie funkcji
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+
+create function f_add_first_name(firstName varchar(15)) returns int
+begin
+    if (select id from first_name where lower(name) = lower(firstName)) is null
+    then
+        insert into first_name(name) values (firstName);
+    end if;
+
+    return (select id from first_name where lower(name) = lower(firstName));
+end;
+
+select f_add_first_name('Roman') as first_name_id;
