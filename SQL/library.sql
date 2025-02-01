@@ -200,7 +200,8 @@ from user
 select *
 from v_user_full_data;
 
-insert into last_name(name) values ('Szczęsny');
+insert into last_name(name)
+values ('Szczęsny');
 
 insert into author(first_name_id, last_name_id)
 values ((select id from first_name where name = 'Tomasz'),
@@ -238,3 +239,93 @@ select f_add_last_name('Górny') as last_name_id;
 insert into author(first_name_id, last_name_id)
 values ((select f_add_first_name('Wacław')),
         (select f_add_last_name('Wacławski')));
+
+
+create table book_status
+(
+    id   int auto_increment primary key,
+    name varchar(15) not null unique
+);
+
+create table book_copy
+(
+    id        int auto_increment primary key,
+    book_id   int not null,
+
+    status_id int not null,
+    foreign key (book_id) REFERENCES book (book_id) on update cascade on delete restrict,
+    foreign key (status_id) references book_status (id) on update cascade on delete restrict
+);
+
+insert into book_status(name)
+values ('Dostępna'),
+       ('Wypożyczona'),
+       ('Zniszczona');
+
+insert into book_copy(book_id, status_id)
+VALUES (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 1);
+
+create table user_book_rent
+(
+    id           int auto_increment primary key,
+    book_copy_id int  not null,
+    user_id      int  not null,
+    rented_on    date not null default (now()),
+    returned_on  date null,
+
+    foreign key (book_copy_id) references book (book_id) on update cascade on delete restrict,
+    foreign key (user_id) references user (user_id) on update cascade on delete restrict
+);
+
+insert into user_book_rent(book_copy_id, user_id)
+values (1, 2);
+update book_copy
+set status_id = 2
+where id = 1;
+
+-- 1. baza sprawdza, czy książka jest wypożyczona
+create trigger trg_rent_book_insert
+    before insert
+    on user_book_rent
+    for each row
+begin
+    if (select book_copy.status_id from book_copy where id = NEW.book_copy_id) <> 1
+    then
+        SIGNAL SQLSTATE '45000' set
+            MYSQL_ERRNO = 60655,
+            MESSAGE_TEXT = 'Error: Książka jest już wypożyczona';
+    end if;
+end;
+
+-- 2. zmienia status na wypożyczona po dodaniu rekordu do user_book_rent
+drop trigger if exists trg_rent_book_update_status_insert;
+create trigger trg_rent_book_update_status_insert
+    after insert
+    on user_book_rent
+    for each row
+begin
+    update book_copy set status_id = 2 where id = NEW.book_copy_id;
+end;
+
+
+-- 3. zwrot książki zmienia status wypożyczenia
+insert into user_book_rent(book_copy_id, user_id)
+values (1, 2);
+
+update user_book_rent set returned_on = now() where id = 8;
+
+drop trigger if exists trg_return_book_update;
+create trigger trg_return_book_update after update on user_book_rent for each row
+begin
+    -- zablokować aktualizację statusu dla rekordów, które returned_on
+    -- nie są nullami
+    if OLD.returned_on is null and NEW.returned_on is not null
+    then
+        update book_copy set status_id = 1 where id = NEW.book_copy_id;
+    end if;
+end;
+
+update user_book_rent set returned_on = '2025-01-29' where id = 8;
