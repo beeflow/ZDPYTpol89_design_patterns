@@ -127,7 +127,7 @@ alter table user
         references first_name (id) on update cascade on delete restrict;
 
 alter table user
-    add constraint user_last_name_id_fk foreign key (user_last_name_id)
+        add constraint user_last_name_id_fk foreign key (user_last_name_id)
         references last_name (id) on update cascade on delete restrict;
 
 alter table user
@@ -373,7 +373,7 @@ alter table book_author_through rename column ba_book_id to book_id;
 alter table book_author_through rename column ba_author_id to author_id;
 
 
-SELECT
-FROM `book` AS `t1`
-         INNER JOIN `book_author_through` AS `t2` ON (`t2`.`book_id` = `t1`.`book_id`)
-         INNER JOIN `author` AS `t3` ON (`t2`.`author_id` = `t3`.`author_id`)
+alter table user_book_rent drop constraint user_book_rent_ibfk_1;
+drop trigger trg_return_book_update;
+alter table user_book_rent add CONSTRAINT user_book_rent_ibfk_1 foreign key (book_copy_id)
+    references book_copy(id) on delete restrict on update cascade;
