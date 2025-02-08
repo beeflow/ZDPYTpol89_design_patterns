@@ -318,10 +318,15 @@ end;
 insert into user_book_rent(book_copy_id, user_id)
 values (1, 2);
 
-update user_book_rent set returned_on = now() where id = 8;
+update user_book_rent
+set returned_on = now()
+where id = 8;
 
 drop trigger if exists trg_return_book_update;
-create trigger trg_return_book_update after update on user_book_rent for each row
+create trigger trg_return_book_update
+    after update
+    on user_book_rent
+    for each row
 begin
     -- zablokować aktualizację statusu dla rekordów, które returned_on
     -- nie są nullami
@@ -334,8 +339,9 @@ begin
     -- logicznie nieprawidłowe!
     if OLD.book_copy_id <> NEW.book_copy_id
     then
-        update book_copy set status_id = (select status_id from book_copy where id = OLD.book_copy_id)
-                         where id = NEW.book_copy_id;
+        update book_copy
+        set status_id = (select status_id from book_copy where id = OLD.book_copy_id)
+        where id = NEW.book_copy_id;
         update book_copy set status_id = 1 where id = OLD.book_copy_id;
     end if;
 end;
@@ -360,3 +366,14 @@ end;
 -- 2. dodaję informację o wypożyczeniu do tabeli wypożyczeń
 -- 3. zmieniam status egzemplarza na wypożyczony
 -- commit
+
+
+alter table book_author rename book_author_through;
+alter table book_author_through rename column ba_book_id to book_id;
+alter table book_author_through rename column ba_author_id to author_id;
+
+
+SELECT
+FROM `book` AS `t1`
+         INNER JOIN `book_author_through` AS `t2` ON (`t2`.`book_id` = `t1`.`book_id`)
+         INNER JOIN `author` AS `t3` ON (`t2`.`author_id` = `t3`.`author_id`)
