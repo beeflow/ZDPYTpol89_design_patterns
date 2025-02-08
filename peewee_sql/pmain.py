@@ -16,9 +16,12 @@ def main() -> None:
         .join(LastName, on=(Author.last_name == LastName.id))
     )
 
+    Author.books.get_through_model()
+
     for author in authors:
-        for book in author.books.select():
-            print(book)
+        print(author)
+        for book in author.books:
+            print(f"    -> {book.get()}")
 
 
 if __name__ == '__main__':
