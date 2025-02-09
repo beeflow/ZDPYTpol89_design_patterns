@@ -1,6 +1,7 @@
 from typing import Optional
 
 from alchemy.models.author import Author
+from alchemy.models.book_copy import BookCopy
 from alchemy.models.first_name import FirstName
 from alchemy.models.last_name import LastName
 from alchemy.settings import session
@@ -27,6 +28,10 @@ def main() -> None:
 
     print(first_name, last_name)
     # author = Author(first_name=first_name, last_name=last_name)
+
+    bcs: list[BookCopy] = session.query(BookCopy).all()
+    for bc in bcs:
+        print(bc)
 
     # session.add(author)
     # session.commit()
