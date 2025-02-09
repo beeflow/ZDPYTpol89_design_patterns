@@ -6,7 +6,7 @@ def main() -> None:
     # authors: list[Author] = session.query(Author).all()
     # for author in authors:
     #     print(author)
-        # print(author.books[0] if len(author.books) != 0 else "")
+    # print(author.books[0] if len(author.books) != 0 else "")
 
     # books: list[Book] = session.query(Book).all()
     # for book in books:
@@ -34,6 +34,14 @@ def main() -> None:
     #
     # session.add(author)
     # session.commit()
+
+    # Przykład zadania domowego dla CAR_RENTAL ;P
+    print("Biblioteka Narodowa Szuflandii")
+    print("------------------------------------")
+    print("1. Lista książek")
+    print("2. Wypożycz książkę")
+
+    what_to_do = input("> ")
 
 
 if __name__ == '__main__':
