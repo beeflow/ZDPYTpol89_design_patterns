@@ -7,9 +7,6 @@ from alchemy.models.status import Status
 
 
 class BookCopy(BaseModel):
-    __tablename__ = 'book_copy'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
     book_id = Column(Integer, ForeignKey("book.book_id"), nullable=False)
     status_id = Column(Integer, ForeignKey("book_status.id"), nullable=False)
 

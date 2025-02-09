@@ -27,7 +27,7 @@ def main() -> None:
     bcs: list[BookCopy] = session.query(BookCopy).all()
 
     for bc in bcs:
-        print(bc.book_rents)
+        print(bc)
 
     # for ub in session.query(UserBookRent).all():
     #     print(ub.book_copy)

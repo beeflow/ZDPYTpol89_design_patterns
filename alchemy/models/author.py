@@ -8,8 +8,6 @@ from alchemy.models.last_name import LastName
 
 
 class Author(BaseModel):
-    __tablename__ = "author"
-
     id = Column("author_id", Integer, primary_key=True, autoincrement=True)
     first_name_id = Column(Integer, ForeignKey("first_name.id"), nullable=False)
     last_name_id = Column(Integer, ForeignKey("last_name.id"), nullable=False)

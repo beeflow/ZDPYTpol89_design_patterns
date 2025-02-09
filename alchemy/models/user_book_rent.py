@@ -7,9 +7,6 @@ from alchemy.models.user import User
 
 
 class UserBookRent(BaseModel):
-    __tablename__ = 'user_book_rent'
-
-    id = Column(Integer, primary_key=True, nullable=False)
     book_copy_id = Column(Integer, ForeignKey('book_copy.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False)
     rented_on = Column(Date, nullable=True)

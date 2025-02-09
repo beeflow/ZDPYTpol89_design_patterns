@@ -13,8 +13,6 @@ book_author_through = Table(
 
 
 class Book(BaseModel):
-    __tablename__ = "book"
-
     id = Column("book_id", Integer, primary_key=True, autoincrement=True)
     title = Column("book_title", String(250), nullable=False)
     isbn = Column("book_isbn", String(13), nullable=True)

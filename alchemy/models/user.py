@@ -7,8 +7,6 @@ from alchemy.models.last_name import LastName
 
 
 class User(BaseModel):
-    __tablename__ = 'user'
-
     id = Column('user_id', Integer, primary_key=True, autoincrement=True)
     email = Column('user_email', String(100), nullable=True)
     phone = Column('user_phone', String(12), nullable=True)
