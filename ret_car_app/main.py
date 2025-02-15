@@ -1,18 +1,16 @@
 from ret_car_app.rent_car_bl import get_available_cars, get_rented_cars, rent_car
 from text_gui import *
 
-
-def get_menu() -> tuple:
-    return (
-        "Lista wypożyczonych samochodów",
-        "Lista dostępnych samochodów",
-        "Wypożycz samochód",
-        "Wyjście"
-    )
+MENU: tuple = (
+    "Lista wypożyczonych samochodów",
+    "Lista dostępnych samochodów",
+    "Wypożycz samochód",
+    "Wyjście"
+)
 
 
 def get_exit_code() -> int:
-    return len(get_menu())
+    return len(MENU)
 
 
 bl_actions = (
@@ -23,7 +21,7 @@ bl_actions = (
 
 
 def main() -> None:
-    show_menu(get_menu())
+    show_menu(MENU)
 
     while (user_action := get_user_action()) != get_exit_code():
         try:
@@ -31,7 +29,7 @@ def main() -> None:
             function = action_data["action"]
             action_data["view"](function)
         except IndexError:
-            show_menu(get_menu())
+            show_menu(MENU)
 
 
 if __name__ == '__main__':
