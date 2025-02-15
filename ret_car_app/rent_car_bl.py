@@ -8,16 +8,16 @@ from ret_car_app.models.customer import Customer
 from ret_car_app.models.first_name import FirstName
 from ret_car_app.models.last_name import LastName
 from ret_car_app.models.rent_car import RentCar
-from ret_car_app.settings import session
+from ret_car_app.settings import SessionLocal
 
 
 def get_rented_cars() -> list[RentCar]:
-    return session.query(RentCar).where(RentCar.returned_on.is_(None)).all()
+    return RentCar.objects.filter(returned_on=None).all()
 
 
 def get_available_cars() -> list[Car]:
     return (
-        session.query(Car)
+        SessionLocal().query(Car)
         .outerjoin(RentCar, Car.id == RentCar.car_id)
         .filter((RentCar.id.is_(None)) | (RentCar.returned_on.isnot(None)))
         .all()
@@ -34,6 +34,8 @@ def rent_car(first_name: str, last_name: str, licence_number: str) -> Optional[R
         customer = create_customer(first_name, last_name, licence_number)
 
     car_rented = RentCar(car=first_available_car, customer=customer, rented_on=now())
+    session = SessionLocal()
+
     session.add(car_rented)
     session.commit()
 
@@ -41,23 +43,17 @@ def rent_car(first_name: str, last_name: str, licence_number: str) -> Optional[R
 
 
 def find_customer(licence_number: str) -> Optional[Customer]:
-    return session.query(Customer).filter(Customer.licence_number == licence_number).first()
+    return SessionLocal().query(Customer).filter(Customer.licence_number == licence_number).first()
 
 
 def create_customer(first_name: str, last_name: str, licence_number: str) -> Customer:
-    if not (fn_obj := session.query(FirstName).filter(FirstName.name == first_name).first()):
-        fn_obj = FirstName(name=first_name)
+    fn_obj = FirstName.objects.get_or_create(name=first_name)[1]
+    ln_obj = LastName.objects.get_or_create(name=last_name)[1]
 
-    if not (ln_obj := session.query(LastName).filter(LastName.name == last_name).first()):
-        ln_obj = LastName(name=last_name)
-
-    customer = Customer(
+    customer = Customer.objects.create(
         first_name=fn_obj,
         last_name=ln_obj,
         licence_number=licence_number
     )
-
-    session.add(customer)
-    session.commit()
 
     return customer

@@ -16,4 +16,4 @@ DB_URL = URL.create(**DATABASE_CONFIG)
 engine = create_engine(DB_URL, echo=False)
 
 # sesja
-session = sessionmaker(bind=engine)()
+SessionLocal = sessionmaker(bind=engine)
