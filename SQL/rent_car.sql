@@ -80,7 +80,8 @@ values ('ZS'),
 
 insert into car (brand_id, model_id, plate_number)
 values (1, 1, 'NU74 WPK');
-
+insert into car (brand_id, model_id, plate_number)
+values (4, 3, 'ABC23423');
 insert into car (brand_id, model_id, plate_number)
 values ((select id from car_brand where name = 'BMW'),
         (select id from car_model where name = 'X5'),
@@ -110,9 +111,9 @@ VALUES ((select id from first_name where name = 'Tomasz'),
 insert into rent_car(car_id, customer_id, rented_on)
 values (1, 1, now());
 insert into rent_car(car_id, customer_id, rented_on)
-values (3, 2, now());
+values (2, 2, now());
 insert into rent_car(car_id, customer_id, rented_on)
-values (3, 3, now());
+values (2, 3, now());
 
 -- Full outer join in MySQL...
 
